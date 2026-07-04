@@ -3,9 +3,21 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 // ── CORS ───────────────────────────────────────────────
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-$allowed = ['http://localhost:3000', 'http://lvh.me:3000', 'http://localhost:3001', 'http://lvh.me:3001'];
+$allowed = [
+    'http://localhost:3000',
+    'http://lvh.me:3000',
+    'http://localhost:3001',
+    'http://lvh.me:3001',
 
-if (preg_match('/^http:\/\/[a-z0-9-]+\.lvh\.me:300[01]$/', $origin) || in_array($origin, $allowed)) {
+    'https://mvp-client-git-main-vasuki84.vercel.app',
+    'https://mvp-client-peach.vercel.app'
+];
+
+if (
+    preg_match('/^http:\/\/[a-z0-9-]+\.lvh\.me:300[01]$/', $origin) ||
+    preg_match('/^https:\/\/.*\.vercel\.app$/', $origin) ||
+    in_array($origin, $allowed)
+) {
     header("Access-Control-Allow-Origin: $origin");
 }
 

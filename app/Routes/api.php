@@ -11,24 +11,32 @@ require_once __DIR__ . '/../Controllers/UserController.php';
 require_once __DIR__ . '/../Controllers/MasterAuthController.php';
 
 
-//-Niranjan
-function route($method,$uri, $handler){
+// function route($method,$uri, $handler){
+//    $requestMethod = $_SERVER['REQUEST_METHOD'];
+// $requestUri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+// // Remove base path
+// $basePath   = '/new-MVP/MVP-server/public';
+// $requestUri = str_replace($basePath, '', $requestUri);
+// $requestUri = '/' . trim($requestUri, '/');
+
+// if ($requestMethod === strtoupper($method) && $requestUri === $uri) {
+//     $handler();
+//     exit;
+// }
+// }
+
+function route($method, $uri, $handler){
+
     $requestMethod = $_SERVER['REQUEST_METHOD'];
-    $requestUri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-    // Remove base path
-    $basePath   = '/new-MVP/MVP-server/public';
-    $requestUri = str_replace($basePath, '', $requestUri);
-    $requestUri = '/' . trim($requestUri, '/');
+    var_dump($requestMethod);
+    var_dump($requestUri);
 
-    if ($requestMethod === strtoupper($method) && $requestUri === $uri) {
-        $handler();
-        exit;
-    }
+    exit;
 }
 
-
-//-Mithra
 // routeWithId() — matches /segment/{id} and passes id to handler-Mithra
 function routeWithId($method, $prefix, $handler) {
     $requestMethod = $_SERVER['REQUEST_METHOD'];

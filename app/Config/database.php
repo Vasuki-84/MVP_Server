@@ -38,8 +38,8 @@ function getMasterDB() {
     static $masterPdo = null;
     if ($masterPdo === null) {
         try {
-            // $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
-            $dsn = "mysql:host=localhost;port=3308;dbname=012_mvp;charset=utf8mb4";
+            $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+            // $dsn = "mysql:host=localhost;port=3308;dbname=012_mvp;charset=utf8mb4";
             $masterPdo = new PDO($dsn, DB_USER, DB_PASS, [
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -92,51 +92,25 @@ function getDB() {
 
         $dbName = $tenant['db_name'];
         if (empty($dbName)) {
-            $dbName = 'tenant_' . preg_replace('/[^a-zA-Z0-9_]/', '_', strtolower($subdomain)) . '_db';
+            $dbName = 'if0_42327973_' . strtolower($subdomain); . '_db';
         }
 
         try {
             // Attempt to connect to the tenant database
-            // $dsn = "mysql:host=" . DB_HOST . ";dbname=" . $dbName . ";charset=utf8mb4";
-            $dsn = "mysql:host=localhost;port=3308;dbname=" . $dbName . ";charset=utf8mb4";
+            $dsn = "mysql:host=" . DB_HOST . ";dbname=" . $dbName . ";charset=utf8mb4";
+            // $dsn = "mysql:host=localhost;port=3308;dbname=" . $dbName . ";charset=utf8mb4";
             $tenantPdo = new PDO($dsn, DB_USER, DB_PASS, [
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES   => false,
             ]);
         } catch (PDOException $e) {
-            // Connection failed because the database probably doesn't exist. Let's create it.
-            try {
-                // Connect to MySQL server without a dbname to create it safely
-                // $dsnNoDb = "mysql:host=" . DB_HOST . ";charset=utf8mb4";
-                $dsnNoDb = "mysql:host=localhost;port=3308;charset=utf8mb4";
-                $tempPdo = new PDO($dsnNoDb, DB_USER, DB_PASS, [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                ]);
-                $tempPdo->exec("CREATE DATABASE IF NOT EXISTS `$dbName` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-                $tempPdo = null; // Close temp connection
-
-                // Update Master DB with the db_name
-                $up = $masterDb->prepare("UPDATE tenants SET db_name = ? WHERE id = ?");
-                $up->execute([$dbName, $tenant['id']]);
-
-                // Now connect to the new tenant DB
-                // $dsn = "mysql:host=" . DB_HOST . ";dbname=" . $dbName . ";charset=utf8mb4";
-                $dsn = "mysql:host=localhost;port=3308;dbname=" . $dbName . ";charset=utf8mb4";
-                $tenantPdo = new PDO($dsn, DB_USER, DB_PASS, [
-                    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                    PDO::ATTR_EMULATE_PREPARES   => false,
-                ]);
-
-                // Run migrations and seed owner user
-                runTenantMigrations($tenantPdo, $tenant);
-
-            } catch (PDOException $ex) {
-                http_response_code(500);
-                die(json_encode(['status' => 'error', 'message' => 'Failed to provision tenant database: ' . $ex->getMessage()]));
-            }
-        }
+            http_response_code(500);
+            die(json_encode([
+                'status' => 'error',
+                'message' => 'Tenant database not found.'
+    ]));
+}
     }
     return $tenantPdo;
 }

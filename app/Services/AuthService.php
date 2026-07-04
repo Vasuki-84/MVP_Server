@@ -31,7 +31,7 @@ class AuthService {
         $tenantId = 'TNT' . strtoupper(substr(uniqid(), -8));
 
         // Generate tenant database name
-        $dbName = 'tenant_' . $subdomain . '_db';
+        $dbName = 'if0_42327973_' . strtolower($subdomain);
 
         // Hash owner password
         $hashedPassword = Hash::make($data['password']);
