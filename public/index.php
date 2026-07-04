@@ -1,4 +1,7 @@
 <?php
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+header("X-Debug-Origin: $origin");
+
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 // ── CORS ───────────────────────────────────────────────
